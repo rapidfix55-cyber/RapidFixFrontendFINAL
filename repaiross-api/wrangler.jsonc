@@ -9,5 +9,6 @@
 
 	"vars": {
 		"SUPABASE_URL": "https://myoejvzylswkqpfxxcay.supabase.co",
+		"SITE_URL": "https://www.rapidfixauto.in",
 	},
 }

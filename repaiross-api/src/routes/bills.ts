@@ -178,16 +178,41 @@ bills.post('/:id/send', requireOwner, async (c) => {
 	if (billErr || !bill) return c.json({ error: 'Bill not found' }, 404);
 
 	const customer = bill.customers as any;
-	const billUrl = `https://repaiross.com/bill/${bill.public_token}`;
+	const billUrl = `${c.env.SITE_URL ?? 'https://www.rapidfixauto.in'}/bill/${bill.public_token}`;
 
-	if ((delivery_method === 'whatsapp' || delivery_method === 'both') && customer?.whatsapp_opt_in && c.env.WA_NUMBER_ID) {
-		await waSendTemplate({
-			waNumberId: c.env.WA_NUMBER_ID,
-			accessToken: c.env.WA_ACCESS_TOKEN,
-			to: customer.phone,
-			templateName: 'bill_ready',
-			variables: [customer.name, `₹${bill.total}`, billUrl],
-		});
+	// WhatsApp delivery is best-effort — a failure must NOT crash the request.
+	// The owner can always share the bill link manually.
+	let wa_warning: string | null = null;
+
+	if (delivery_method === 'whatsapp' || delivery_method === 'both') {
+		if (!customer?.whatsapp_opt_in) {
+			wa_warning = 'Customer has not opted in to WhatsApp';
+		} else if (!c.env.WA_NUMBER_ID) {
+			wa_warning = 'WhatsApp is not configured';
+		} else {
+			try {
+				await waSendTemplate({
+					waNumberId: c.env.WA_NUMBER_ID,
+					accessToken: c.env.WA_ACCESS_TOKEN,
+					to: customer.phone,
+					templateName: 'bill_ready',
+					variables: [customer.name, `₹${bill.total}`, billUrl],
+				});
+			} catch (e: any) {
+				// Extract Meta's human-readable reason if present
+				let reason = e?.message ?? 'WhatsApp delivery failed';
+				const m = /WhatsApp send failed: (\{.*\})/.exec(reason);
+				if (m) {
+					try {
+						reason = JSON.parse(m[1])?.error?.message ?? reason;
+					} catch {
+						/* keep raw */
+					}
+				}
+				wa_warning = `WhatsApp delivery failed: ${reason}`;
+				console.error('Bill WA send failed:', e);
+			}
+		}
 	}
 
 	if (delivery_method === 'email' || delivery_method === 'both') {
@@ -207,7 +232,7 @@ bills.post('/:id/send', requireOwner, async (c) => {
 		.single();
 
 	if (updateErr) return c.json({ error: updateErr.message }, 500);
-	return c.json(updated);
+	return c.json({ ...updated, wa_warning });
 });
 
 // PATCH /bills/:id/payment — record payment

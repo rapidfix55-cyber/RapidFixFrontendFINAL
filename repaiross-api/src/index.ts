@@ -28,6 +28,7 @@ export interface Env {
 	WA_ACCESS_TOKEN: string;
 	OWNER_WA_NUMBER: string;
 	FAST2SMS_API_KEY: string;
+	SITE_URL: string;
 }
 
 const app = new Hono<{ Bindings: Env }>();

@@ -13,7 +13,7 @@ interface Props {
 }
 
 const PUBLIC_BASE =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://repaiross.com";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.rapidfixauto.in";
 
 // ── Small UI atoms (match NewJobModal styling) ────────────────────────────────
 
@@ -184,10 +184,15 @@ export function BillModal({ jobId, billId, onClose, onSaved }: Props) {
     setSending(true);
     setError(null);
     try {
-      await billsApi.send(bill.id, "whatsapp");
+      const res = (await billsApi.send(bill.id, "whatsapp")) as {
+        wa_warning?: string | null;
+      };
       const fresh = await billsApi.get(bill.id);
       hydrate(fresh);
       onSaved();
+      if (res?.wa_warning) {
+        setError(`Bill marked sent, but ${res.wa_warning}`);
+      }
     } catch (e: any) {
       setError(e?.error ?? "Failed to send bill");
     } finally {
