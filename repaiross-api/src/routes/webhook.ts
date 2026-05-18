@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { createHmac } from 'node:crypto';
 import { Env } from '../index';
 import { db } from '../type/lib/db';
-import { waSendText } from '../type/lib/whatsapp';
+import { waSendText, waSendTemplate } from '../type/lib/whatsapp';
 
 type WebhookEnv = { Bindings: Env };
 const webhook = new Hono<WebhookEnv>();
@@ -54,11 +54,10 @@ webhook.post('/whatsapp', async (c) => {
 			if (existing) continue;
 
 			// Find the active location tied to this WA number
-			const waNumberId = value.metadata?.phone_number_id;
 			const { data: location } = await supabase
 				.from('locations')
-				.select('id, wa_number_id, wa_access_token')
-				.eq('wa_number_id', waNumberId)
+				.select('id')
+				.eq('active', true)
 				.single();
 
 			// Check if known customer
@@ -78,13 +77,24 @@ webhook.post('/whatsapp', async (c) => {
 				leadId = lead?.id ?? null;
 
 				// Notify owner of new lead
-				if (lead && location?.wa_number_id && c.env.OWNER_WA_NUMBER) {
+				if (lead && c.env.WA_NUMBER_ID && c.env.OWNER_WA_NUMBER) {
+					// Notify owner of new lead
 					const preview = body ? body.slice(0, 80) : '(no text)';
 					waSendText({
-						waNumberId: location.wa_number_id,
-						accessToken: location.wa_access_token,
+						waNumberId: c.env.WA_NUMBER_ID,
+						accessToken: c.env.WA_ACCESS_TOKEN,
 						to: c.env.OWNER_WA_NUMBER,
 						body: `New WhatsApp lead from ${phone}: "${preview}"`,
+					}).catch(console.error);
+
+					// Send welcome message to the new lead
+					const profileName = value.contacts?.[0]?.profile?.name ?? 'there';
+					waSendTemplate({
+						waNumberId: c.env.WA_NUMBER_ID,
+						accessToken: c.env.WA_ACCESS_TOKEN,
+						to: waId,
+						templateName: 'rapidfix_welcome',
+						variables: [profileName],
 					}).catch(console.error);
 				}
 			}

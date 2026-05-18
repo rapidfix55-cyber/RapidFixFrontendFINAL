@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { AppContext } from '../middleware/auth';
 import { db } from '../type/lib/db';
+import { waSendText } from '../type/lib/whatsapp';
 
 const pub = new Hono<AppContext>();
 
@@ -110,6 +111,19 @@ pub.post('/booking', async (c) => {
 		.single();
 
 	if (bookingError) return c.json({ error: bookingError.message }, 500);
+
+	// Notify owner
+	if (c.env.WA_NUMBER_ID && c.env.OWNER_WA_NUMBER) {
+		const slotDate = body.date
+			? new Date(body.date).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' })
+			: 'slot TBD';
+		waSendText({
+			waNumberId: c.env.WA_NUMBER_ID,
+			accessToken: c.env.WA_ACCESS_TOKEN,
+			to: c.env.OWNER_WA_NUMBER,
+			body: `New online booking from ${body.name ?? 'customer'} (${body.contact}) for ${body.brand} ${body.model} — ${body.serviceType} on ${slotDate}`,
+		}).catch(console.error);
+	}
 
 	return c.json({ success: true, bookingId: booking.id }, 201);
 });

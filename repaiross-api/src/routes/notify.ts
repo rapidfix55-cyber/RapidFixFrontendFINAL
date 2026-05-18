@@ -16,16 +16,8 @@ notify.post('/blast', requireOwner, async (c) => {
 	const message: string = body.message?.trim();
 	if (!message) return c.json({ error: 'message is required' }, 400);
 
-	// Resolve WA credentials from active location
-	const { data: location, error: locErr } = await supabase
-		.from('locations')
-		.select('id, wa_number_id, wa_access_token')
-		.eq('active', true)
-		.limit(1)
-		.single();
-
-	if (locErr || !location?.wa_number_id) {
-		return c.json({ error: 'WhatsApp not configured for any active location' }, 500);
+	if (!c.env.WA_NUMBER_ID) {
+		return c.json({ error: 'WhatsApp not configured' }, 500);
 	}
 
 	// Fetch target customers
@@ -47,8 +39,8 @@ notify.post('/blast', requireOwner, async (c) => {
 	for (const customer of customers) {
 		try {
 			await waSendText({
-				waNumberId: location.wa_number_id,
-				accessToken: location.wa_access_token,
+				waNumberId: c.env.WA_NUMBER_ID,
+				accessToken: c.env.WA_ACCESS_TOKEN,
 				to: customer.phone,
 				body: message,
 			});

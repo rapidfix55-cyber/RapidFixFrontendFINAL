@@ -139,14 +139,12 @@ customers.post('/:id/messages', requireOwner, async (c) => {
 	if (!customer) return c.json({ error: 'Customer not found' }, 404);
 	if (!customer.whatsapp_opt_in) return c.json({ error: 'Customer has opted out of WhatsApp' }, 422);
 
-	const { data: location } = await supabase.from('locations').select('wa_number_id, wa_access_token').eq('active', true).limit(1).single();
-
-	if (!location?.wa_number_id) return c.json({ error: 'WhatsApp not configured' }, 500);
+	if (!c.env.WA_NUMBER_ID) return c.json({ error: 'WhatsApp not configured' }, 500);
 
 	const { waSendText } = await import('../type/lib/whatsapp');
 	await waSendText({
-		waNumberId: location.wa_number_id,
-		accessToken: location.wa_access_token,
+		waNumberId: c.env.WA_NUMBER_ID,
+		accessToken: c.env.WA_ACCESS_TOKEN,
 		to: customer.phone,
 		body: msgBody,
 	});

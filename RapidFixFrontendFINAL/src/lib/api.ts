@@ -7,6 +7,7 @@ import type {
   Booking,
   BookingsResponse,
   Bill,
+  BillDetail,
   BillsResponse,
   Customer,
   CustomersResponse,
@@ -237,7 +238,7 @@ export const billsApi = {
     } = {},
   ) => api<BillsResponse>(`/bills${qs(params)}`),
 
-  get: (id: string) => api<Bill>(`/bills/${id}`),
+  get: (id: string) => api<BillDetail>(`/bills/${id}`),
 
   create: (body: {
     job_id: string;
@@ -249,7 +250,7 @@ export const billsApi = {
       quantity: number;
       unit_price: number;
     }[];
-  }) => api<Bill>("/bills", { method: "POST", body: JSON.stringify(body) }),
+  }) => api<BillDetail>("/bills", { method: "POST", body: JSON.stringify(body) }),
 
   update: (
     id: string,
@@ -264,7 +265,10 @@ export const billsApi = {
       }[];
     },
   ) =>
-    api<Bill>(`/bills/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
+    api<BillDetail>(`/bills/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    }),
 
   send: (id: string, delivery_method: "whatsapp" | "email" | "both") =>
     api<Bill>(`/bills/${id}/send`, {
@@ -278,7 +282,7 @@ export const billsApi = {
       body: JSON.stringify({ amount_paid }),
     }),
 
-  getPublic: (token: string) => api<Bill>(`/bills/b/${token}`),
+  getPublic: (token: string) => api<BillDetail>(`/bills/b/${token}`),
 };
 
 // ── Customers ─────────────────────────────────────────────────────────────────

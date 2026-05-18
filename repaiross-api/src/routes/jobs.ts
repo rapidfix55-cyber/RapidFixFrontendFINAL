@@ -1,17 +1,16 @@
 import { Hono } from 'hono';
 import { AppContext, requireAuth, requireOwner } from '../middleware/auth';
 import { db } from '../type/lib/db';
-import { waSendText } from '../type/lib/whatsapp';
+import { waSendTemplate } from '../type/lib/whatsapp';
 
-function jobStatusMessage(customerName: string, vehicleLabel: string, status: string, billUrl?: string): string {
-	const v = vehicleLabel || 'your vehicle';
-	const msgs: Record<string, string> = {
-		diagnosed: `Hi ${customerName}, we've diagnosed ${v}. Work begins shortly.`,
-		in_progress: `Hi ${customerName}, repairs are underway on ${v}.`,
-		ready: `Hi ${customerName}, ${v} is ready for pickup! 🎉`,
-		delivered: `Hi ${customerName}, thanks for visiting. Your bill: ${billUrl ?? ''}`,
+function jobStatusLabel(status: string): string {
+	const labels: Record<string, string> = {
+		diagnosed: 'Diagnosed — work begins shortly.',
+		in_progress: 'Repairs are underway.',
+		ready: 'Ready for pickup!',
+		delivered: 'Delivered — thank you for visiting RapidFix!',
 	};
-	return msgs[status] ?? `Hi ${customerName}, your job status has been updated to: ${status}.`;
+	return labels[status] ?? `Status updated to: ${status}.`;
 }
 
 const jobs = new Hono<AppContext>();
@@ -155,7 +154,6 @@ jobs.patch('/:id/status', requireAuth, async (c) => {
       *,
       customers(id, name, phone, whatsapp_opt_in),
       vehicles(make, model, registration),
-      locations(wa_number_id, wa_access_token),
       bills(id, public_token)
     `,
 		)
@@ -184,24 +182,20 @@ jobs.patch('/:id/status', requireAuth, async (c) => {
 	// 3. Send WhatsApp if customer opted in and WA is configured
 	const customer = job.customers as any;
 	const vehicle = job.vehicles as any;
-	const location = job.locations as any;
 	const bills = job.bills as any[];
 
 	let waSent = false;
-	if (customer?.whatsapp_opt_in && location?.wa_number_id) {
+	if (customer?.whatsapp_opt_in && c.env.WA_NUMBER_ID) {
 		const vehicleLabel = vehicle ? `${vehicle.make ?? ''} ${vehicle.model ?? ''} (${vehicle.registration ?? ''})`.trim() : 'your vehicle';
-
-		// For 'delivered' status, include bill URL if one exists
-		const billUrl = bills?.[0] ? `https://repaiross.com/bill/${bills[0].public_token}` : undefined;
-
-		const messageBody = jobStatusMessage(customer.name, vehicleLabel, status, billUrl);
+		const statusLabel = jobStatusLabel(status);
 
 		try {
-			await waSendText({
-				waNumberId: location.wa_number_id,
-				accessToken: location.wa_access_token,
+			await waSendTemplate({
+				waNumberId: c.env.WA_NUMBER_ID,
+				accessToken: c.env.WA_ACCESS_TOKEN,
 				to: customer.phone,
-				body: messageBody,
+				templateName: 'job_status_v2',
+				variables: [customer.name, vehicleLabel, statusLabel],
 			});
 			waSent = true;
 		} catch (e) {

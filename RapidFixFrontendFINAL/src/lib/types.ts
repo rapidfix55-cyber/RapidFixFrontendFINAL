@@ -142,13 +142,24 @@ export interface BookingsResponse {
 
 export type BillStatus = "draft" | "sent" | "paid" | "partial" | "unpaid";
 
+// DB constraint: bill_items.category in ('labour','parts')
+export type BillItemCategory = "labour" | "parts";
+
 export interface BillItem {
   id: string;
-  category: "labour" | "parts" | "consumables" | "other";
+  category: BillItemCategory;
   description: string;
   quantity: number;
   unit_price: number;
-  total: number;
+  total: number; // generated column (quantity * unit_price)
+}
+
+// Draft line used by the builder before the bill is saved
+export interface BillItemDraft {
+  category: BillItemCategory;
+  description: string;
+  quantity: number;
+  unit_price: number;
 }
 
 export interface Bill {
@@ -164,6 +175,39 @@ export interface Bill {
   created_at: string;
   customers: { name: string; phone: string } | null;
   jobs: { id: string } | null;
+}
+
+// Full bill returned by GET /bills/:id (admin detail / builder)
+export interface BillDetail {
+  id: string;
+  job_id: string;
+  customer_id: string;
+  subtotal: number;
+  discount: number;
+  total: number;
+  amount_paid: number;
+  amount_due: number;
+  status: BillStatus;
+  public_token: string;
+  notes: string | null;
+  delivery_method: "whatsapp" | "email" | "both" | null;
+  sent_at: string | null;
+  paid_at: string | null;
+  created_at: string;
+  updated_at: string;
+  customers: { name: string; phone: string } | null;
+  jobs: {
+    id: string;
+    service_description: string | null;
+    vehicles: {
+      make: string | null;
+      model: string | null;
+      registration: string | null;
+      type: string | null;
+    } | null;
+  } | null;
+  locations: { name: string; address: string | null; phone: string | null } | null;
+  bill_items: BillItem[];
 }
 
 export interface BillsResponse {

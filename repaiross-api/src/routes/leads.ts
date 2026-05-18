@@ -36,6 +36,17 @@ leads.post('/capture', async (c) => {
 		.single();
 
 	if (error) return c.json({ error: error.message }, 500);
+
+	// Notify owner
+	if (c.env.WA_NUMBER_ID && c.env.OWNER_WA_NUMBER) {
+		waSendText({
+			waNumberId: c.env.WA_NUMBER_ID,
+			accessToken: c.env.WA_ACCESS_TOKEN,
+			to: c.env.OWNER_WA_NUMBER,
+			body: `New lead from website popup: ${fullPhone}`,
+		}).catch(console.error);
+	}
+
 	return c.json(data, 201);
 });
 
@@ -139,17 +150,14 @@ leads.post('/:id/messages', requireOwner, async (c) => {
 	const leadId = c.req.param('id');
 	const { body: msgBody } = await c.req.json();
 
-	const { data: lead } = await supabase.from('leads').select('phone, location_id').eq('id', leadId).single();
+	const { data: lead } = await supabase.from('leads').select('phone').eq('id', leadId).single();
 
 	if (!lead) return c.json({ error: 'Lead not found' }, 404);
-
-	const { data: location } = await supabase.from('locations').select('wa_number_id, wa_access_token').eq('id', lead.location_id).single();
-
-	if (!location?.wa_number_id) return c.json({ error: 'WhatsApp not configured' }, 500);
+	if (!c.env.WA_NUMBER_ID) return c.json({ error: 'WhatsApp not configured' }, 500);
 
 	await waSendText({
-		waNumberId: location.wa_number_id,
-		accessToken: location.wa_access_token,
+		waNumberId: c.env.WA_NUMBER_ID,
+		accessToken: c.env.WA_ACCESS_TOKEN,
 		to: lead.phone,
 		body: msgBody,
 	});

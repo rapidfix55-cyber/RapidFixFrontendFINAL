@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { AppContext, requireOwner } from '../middleware/auth';
 import { db } from '../type/lib/db';
-import { waSendText } from '../type/lib/whatsapp';
+import { waSendTemplate } from '../type/lib/whatsapp';
 
 const bills = new Hono<AppContext>();
 
@@ -16,11 +16,10 @@ bills.get('/b/:token', async (c) => {
 		.from('bills')
 		.select(
 			`
-      id, subtotal, discount, tax_type, tax_rate, tax_amount, total,
+      id, subtotal, discount, total,
       amount_paid, amount_due, status, notes, created_at,
       customers(name, phone),
-      vehicles(make, model, registration, type),
-      jobs(id, service_description),
+      jobs(id, service_description, vehicles(make, model, registration, type)),
       locations(name, address, phone),
       bill_items(id, category, description, quantity, unit_price, total)
     `,
@@ -112,7 +111,7 @@ bills.get('/:id', requireOwner, async (c) => {
 			`
       *,
       customers(name, phone),
-      vehicles:jobs(vehicles(make, model, registration)),
+      jobs(id, service_description, vehicles(make, model, registration, type)),
       locations(name, address, phone),
       bill_items(*)
     `,
@@ -169,9 +168,8 @@ bills.post('/:id/send', requireOwner, async (c) => {
 		.from('bills')
 		.select(
 			`
-      *, 
-      customers(name, phone, email, whatsapp_opt_in),
-      locations(wa_number_id, wa_access_token)
+      *,
+      customers(name, phone, email, whatsapp_opt_in)
     `,
 		)
 		.eq('id', id)
@@ -180,15 +178,15 @@ bills.post('/:id/send', requireOwner, async (c) => {
 	if (billErr || !bill) return c.json({ error: 'Bill not found' }, 404);
 
 	const customer = bill.customers as any;
-	const location = bill.locations as any;
 	const billUrl = `https://repaiross.com/bill/${bill.public_token}`;
 
-	if ((delivery_method === 'whatsapp' || delivery_method === 'both') && customer?.whatsapp_opt_in && location?.wa_number_id) {
-		await waSendText({
-			waNumberId: location.wa_number_id,
-			accessToken: location.wa_access_token,
+	if ((delivery_method === 'whatsapp' || delivery_method === 'both') && customer?.whatsapp_opt_in && c.env.WA_NUMBER_ID) {
+		await waSendTemplate({
+			waNumberId: c.env.WA_NUMBER_ID,
+			accessToken: c.env.WA_ACCESS_TOKEN,
 			to: customer.phone,
-			body: `Hi ${customer.name}, your bill is ready. Total: ₹${bill.total}. View here: ${billUrl}`,
+			templateName: 'bill_ready',
+			variables: [customer.name, `₹${bill.total}`, billUrl],
 		});
 	}
 

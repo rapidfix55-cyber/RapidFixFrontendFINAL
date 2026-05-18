@@ -24,6 +24,8 @@ export interface Env {
 	JWT_SECRET: string;
 	WA_VERIFY_TOKEN: string;
 	WA_APP_SECRET: string;
+	WA_NUMBER_ID: string;
+	WA_ACCESS_TOKEN: string;
 	OWNER_WA_NUMBER: string;
 	FAST2SMS_API_KEY: string;
 }

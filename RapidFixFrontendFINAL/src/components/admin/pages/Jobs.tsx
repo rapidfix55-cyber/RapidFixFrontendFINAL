@@ -6,6 +6,7 @@ import { jobsApi } from "@/lib/api";
 import type { Role, Job, JobStatus, Column } from "@/lib/types";
 import { NewJobModal } from "../atoms/NewJobModal";
 import { JobStatusBadge } from "../atoms/JobStatusBadge";
+import { BillModal } from "../atoms/BillModal";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -47,6 +48,11 @@ export function Jobs({ role }: { role: Role }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showNewJob, setShowNewJob] = useState(false);
+  const [billModal, setBillModal] = useState<{
+    jobId?: string;
+    billId?: string;
+  } | null>(null);
+  const [resolvingBill, setResolvingBill] = useState<string | null>(null);
 
   const fetchJobs = useCallback(async () => {
     setLoading(true);
@@ -66,6 +72,24 @@ export function Jobs({ role }: { role: Role }) {
   useEffect(() => {
     fetchJobs();
   }, [fetchJobs]);
+
+  // Open the bill modal for a job — reuse an existing bill if one exists,
+  // otherwise create a new one for this job.
+  async function openBillForJob(jobId: string) {
+    setResolvingBill(jobId);
+    try {
+      const detail = await jobsApi.get(jobId);
+      if (detail.bill?.id) {
+        setBillModal({ billId: detail.bill.id });
+      } else {
+        setBillModal({ jobId });
+      }
+    } catch {
+      setBillModal({ jobId });
+    } finally {
+      setResolvingBill(null);
+    }
+  }
 
   // ── Columns (inside component so fetchJobs + role are in scope) ──────────────
 
@@ -110,6 +134,45 @@ export function Jobs({ role }: { role: Role }) {
       label: "Updated",
       render: (r) => <Muted v={new Date(r.updated_at).toLocaleDateString()} />,
     },
+    ...(role === "owner"
+      ? [
+          {
+            key: "bill",
+            label: "Bill",
+            render: (r: Job) => {
+              const billable = r.status === "ready" || r.status === "delivered";
+              if (!billable) return <span style={{ color: C.textMuted }}>—</span>;
+              const busy = resolvingBill === r.id;
+              return (
+                <button
+                  onClick={() => openBillForJob(r.id)}
+                  disabled={busy}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 5,
+                    padding: "4px 10px",
+                    fontSize: 12,
+                    border: `1px solid ${C.accent}`,
+                    background: C.accent + "12",
+                    borderRadius: 3,
+                    cursor: busy ? "wait" : "pointer",
+                    color: C.accent,
+                    fontFamily: "inherit",
+                    fontWeight: 600,
+                  }}
+                >
+                  <i
+                    className={`ti ${busy ? "ti-loader-2 ti-spin" : "ti-receipt"}`}
+                    style={{ fontSize: 13 }}
+                  />
+                  {busy ? "…" : "Bill"}
+                </button>
+              );
+            },
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -277,6 +340,15 @@ export function Jobs({ role }: { role: Role }) {
           </div>
         )}
       </div>
+
+      {billModal && (
+        <BillModal
+          jobId={billModal.jobId}
+          billId={billModal.billId}
+          onClose={() => setBillModal(null)}
+          onSaved={fetchJobs}
+        />
+      )}
     </div>
   );
 }

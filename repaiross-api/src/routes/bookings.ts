@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { AppContext, requireAuth, requireOwner } from '../middleware/auth';
 import { db } from '../type/lib/db';
-import { waSendText } from '../type/lib/whatsapp';
+import { waSendTemplate } from '../type/lib/whatsapp';
 
 const bookings = new Hono<AppContext>();
 
@@ -99,7 +99,6 @@ bookings.post('/:id/confirm', requireOwner, async (c) => {
 			`
       *,
       customers(name, phone, whatsapp_opt_in),
-      locations(wa_number_id, wa_access_token),
       vehicles(make, model)
     `,
 		)
@@ -116,9 +115,8 @@ bookings.post('/:id/confirm', requireOwner, async (c) => {
 	await supabase.from('bookings').update({ status: 'confirmed', updated_at: new Date().toISOString() }).eq('id', id);
 
 	const customer = booking.customers as any;
-	const location = booking.locations as any;
 
-	if (customer?.whatsapp_opt_in && location?.wa_number_id) {
+	if (customer?.whatsapp_opt_in && c.env.WA_NUMBER_ID) {
 		const slotDate = booking.slot_at
 			? new Date(booking.slot_at).toLocaleString('en-IN', {
 					timeZone: 'Asia/Kolkata',
@@ -127,11 +125,12 @@ bookings.post('/:id/confirm', requireOwner, async (c) => {
 				})
 			: 'your scheduled time';
 
-		await waSendText({
-			waNumberId: location.wa_number_id,
-			accessToken: location.wa_access_token,
+		await waSendTemplate({
+			waNumberId: c.env.WA_NUMBER_ID,
+			accessToken: c.env.WA_ACCESS_TOKEN,
 			to: customer.phone,
-			body: `Hi ${customer.name}, your booking for ${slotDate} is confirmed. See you then! 🔧`,
+			templateName: 'booking_confirmed_v2',
+			variables: [customer.name, slotDate],
 		});
 
 		await supabase.from('bookings').update({ confirmation_sent: true }).eq('id', id);
