@@ -756,6 +756,21 @@ export default function CheckoutPage() {
                   </p>
                 </div>
               )}
+
+              <p className="text-[11px] leading-snug text-[var(--color-grey-600)] text-center">
+                By confirming, you agree to receive booking, service & bill
+                updates from RapidFix on WhatsApp. Reply STOP anytime to opt
+                out. See our{" "}
+                <a
+                  href="/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-[var(--color-primary)]"
+                >
+                  Privacy Policy
+                </a>
+                .
+              </p>
             </div>
           </div>
         </div>

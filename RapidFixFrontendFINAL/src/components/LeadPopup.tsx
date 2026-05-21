@@ -141,6 +141,20 @@ export function LeadPopup() {
             >
               {loading ? "Booking…" : "Book Now"}
             </Button>
+
+            <p className="text-[11px] leading-snug text-zinc-500 dark:text-zinc-400 text-center pt-1">
+              By continuing, you agree to receive booking & service updates from
+              RapidFix on WhatsApp. Reply STOP anytime to opt out. See our{" "}
+              <a
+                href="/privacy"
+                className="underline hover:text-red-500"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Privacy Policy
+              </a>
+              .
+            </p>
           </form>
 
           <div className="mt-8 pt-6 border-t border-zinc-100 dark:border-zinc-800 text-center">

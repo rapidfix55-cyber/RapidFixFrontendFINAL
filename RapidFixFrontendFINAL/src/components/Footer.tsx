@@ -50,7 +50,7 @@ export function Footer() {
       <div className="container mx-auto px-8 mt-12 pt-8 border-t border-[var(--color-grey-800)] text-sm text-[var(--color-grey-300)] flex flex-col md:flex-row justify-between items-center">
         <p>© {new Date().getFullYear()} RapidFix. All rights reserved.</p>
         <div className="flex gap-4 mt-4 md:mt-0">
-          <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
+          <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
           <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
         </div>
       </div>
