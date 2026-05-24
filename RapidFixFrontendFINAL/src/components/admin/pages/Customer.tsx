@@ -236,7 +236,7 @@ function CustomerDrawer({ customer, onClose, onUpdated }: DrawerProps) {
       {/* Drawer */}
       <div style={{
         position: "fixed", top: 0, right: 0, bottom: 0,
-        width: 360, zIndex: 41,
+        width: "min(360px, 100vw)", zIndex: 41,
         background: C.surface, borderLeft: `1px solid ${C.border}`,
         display: "flex", flexDirection: "column",
         boxShadow: "-4px 0 24px rgba(0,0,0,0.08)",
@@ -361,6 +361,88 @@ function CustomerDrawer({ customer, onClose, onUpdated }: DrawerProps) {
         </div>
       </div>
     </>
+  );
+}
+
+// ── Mobile customer card ──────────────────────────────────────────────────────
+
+function CustomerCard({
+  customer,
+  onClick,
+}: {
+  customer: Customer;
+  onClick: () => void;
+}) {
+  return (
+    <div
+      onClick={onClick}
+      style={{
+        padding: "12px 14px",
+        borderBottom: `1px solid ${C.borderFaint}`,
+        display: "flex",
+        flexDirection: "column",
+        gap: 6,
+        cursor: "pointer",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
+        <span
+          style={{
+            fontWeight: 600,
+            fontSize: 14,
+            color: C.text,
+            minWidth: 0,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {customer.name}
+        </span>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 4,
+            fontSize: 11,
+            fontWeight: 500,
+            color: customer.whatsapp_opt_in ? C.success : C.textMuted,
+            flexShrink: 0,
+          }}
+        >
+          <span
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: "50%",
+              background: customer.whatsapp_opt_in ? C.success : C.textMuted,
+            }}
+          />
+          {customer.whatsapp_opt_in ? "WhatsApp" : "Opted out"}
+        </span>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
+        <Mono v={customer.phone} />
+        <Muted v={formatDate(customer.created_at)} />
+      </div>
+      {customer.email && (
+        <Muted v={customer.email} />
+      )}
+    </div>
   );
 }
 
@@ -556,50 +638,64 @@ export function Customers() {
             {debouncedSearch ? `No customers matching "${debouncedSearch}"` : "No customers yet"}
           </div>
         ) : (
-          <div>
-            {/* Header row */}
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "2fr 1.4fr 2fr 1fr 1fr",
-              padding: "9px 16px",
-              background: C.bg,
-              borderBottom: `1px solid ${C.border}`,
-            }}>
-              {cols.map((col) => (
-                <span key={String(col.key)} style={{
-                  fontSize: 11, fontWeight: 600,
-                  color: C.textSec, textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                }}>
-                  {col.label}
-                </span>
+          <>
+            {/* Desktop table */}
+            <div className="cust-desktop">
+              {/* Header row */}
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "2fr 1.4fr 2fr 1fr 1fr",
+                padding: "9px 16px",
+                background: C.bg,
+                borderBottom: `1px solid ${C.border}`,
+              }}>
+                {cols.map((col) => (
+                  <span key={String(col.key)} style={{
+                    fontSize: 11, fontWeight: 600,
+                    color: C.textSec, textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                  }}>
+                    {col.label}
+                  </span>
+                ))}
+              </div>
+
+              {/* Data rows */}
+              {customers.map((customer) => (
+                <div
+                  key={customer.id}
+                  onClick={() => setSelected(customer)}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "2fr 1.4fr 2fr 1fr 1fr",
+                    padding: "11px 16px",
+                    borderBottom: `1px solid ${C.borderFaint}`,
+                    cursor: "pointer",
+                    transition: "background 0.1s",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = C.bg)}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                >
+                  {cols.map((col) => (
+                    <div key={String(col.key)} style={{ display: "flex", alignItems: "center" }}>
+                      {col.render ? col.render(customer) : String(customer[col.key as keyof Customer] ?? "—")}
+                    </div>
+                  ))}
+                </div>
               ))}
             </div>
 
-            {/* Data rows */}
-            {customers.map((customer) => (
-              <div
-                key={customer.id}
-                onClick={() => setSelected(customer)}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "2fr 1.4fr 2fr 1fr 1fr",
-                  padding: "11px 16px",
-                  borderBottom: `1px solid ${C.borderFaint}`,
-                  cursor: "pointer",
-                  transition: "background 0.1s",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = C.bg)}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-              >
-                {cols.map((col) => (
-                  <div key={String(col.key)} style={{ display: "flex", alignItems: "center" }}>
-                    {col.render ? col.render(customer) : String(customer[col.key as keyof Customer] ?? "—")}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
+            {/* Mobile cards */}
+            <div className="cust-mobile">
+              {customers.map((customer) => (
+                <CustomerCard
+                  key={customer.id}
+                  customer={customer}
+                  onClick={() => setSelected(customer)}
+                />
+              ))}
+            </div>
+          </>
         )}
       </div>
 
@@ -660,11 +756,17 @@ export function Customers() {
         />
       )}
 
-      {/* Pulse animation */}
+      {/* Pulse animation + responsive table/cards */}
       <style>{`
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.4; }
+        }
+        .cust-desktop { display: block; }
+        .cust-mobile { display: none; }
+        @media (max-width: 640px) {
+          .cust-desktop { display: none; }
+          .cust-mobile { display: block; }
         }
       `}</style>
     </div>

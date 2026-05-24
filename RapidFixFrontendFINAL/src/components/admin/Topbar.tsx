@@ -71,7 +71,7 @@ export function Topbar({
               onClick={() => setPage("dashboard")}
               style={{ fontSize: 11, color: C.textSec, cursor: "pointer" }}
             >
-              RepairOS
+              RapidFix
             </span>
 
             <span style={{ color: "#d1d5db", fontSize: 13 }}>/</span>

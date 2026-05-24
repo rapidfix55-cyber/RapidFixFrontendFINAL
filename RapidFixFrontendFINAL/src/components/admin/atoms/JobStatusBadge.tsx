@@ -53,18 +53,33 @@ export function JobStatusBadge({ jobId, current, onChanged, readonly }: Props) {
   const [waSent, setWaSent] = useState<boolean | null>(null);
   const [pending, setPending] = useState<JobStatus | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const popRef = useRef<HTMLDivElement>(null);
+
+  const POPOVER_W = 240;
+  const POPOVER_H = 360;
 
   useEffect(() => {
     if (!open) return;
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
+    const handler = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node;
+      // ref wraps only the trigger; the popover is portaled via position:fixed,
+      // so also ignore clicks inside the popover itself
+      if (
+        ref.current &&
+        !ref.current.contains(target) &&
+        !popRef.current?.contains(target)
+      ) {
         setOpen(false);
         setNote("");
         setPending(null);
       }
     };
     document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("touchstart", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+      document.removeEventListener("touchstart", handler);
+    };
   }, [open]);
 
   async function changeStatus(next: JobStatus) {
@@ -109,13 +124,22 @@ export function JobStatusBadge({ jobId, current, onChanged, readonly }: Props) {
             e.currentTarget as HTMLButtonElement
           ).getBoundingClientRect();
 
-          const isMobile = window.innerWidth < 768;
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
 
-          setCoords({
-            top: rect.bottom + 8,
-            left: isMobile ? Math.max(12, window.innerWidth - 260) : rect.left,
-          });
+          // Horizontal: keep fully on-screen with a 12px gutter
+          let left = rect.left;
+          left = Math.min(left, vw - POPOVER_W - 12);
+          left = Math.max(12, left);
 
+          // Vertical: open below; if it would overflow, open above the trigger
+          let top = rect.bottom + 8;
+          if (top + POPOVER_H > vh) {
+            top = Math.max(12, rect.top - POPOVER_H - 8);
+            if (top < 12) top = Math.max(12, vh - POPOVER_H - 12);
+          }
+
+          setCoords({ top, left });
           setOpen((o) => !o);
         }}
         disabled={loading}
@@ -176,19 +200,20 @@ export function JobStatusBadge({ jobId, current, onChanged, readonly }: Props) {
       {/* Popover */}
       {open && (
         <div
+          ref={popRef}
           style={{
             position: "fixed",
-
             background: C.surface,
             border: `1px solid ${C.border}`,
             borderRadius: 10,
             boxShadow:
               "0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06)",
             zIndex: 99999,
-            width: 240,
-            overflow: "hidden",
-            top: 250,
-            left: 1200,
+            width: POPOVER_W,
+            maxHeight: "min(360px, 80vh)",
+            overflowY: "auto",
+            top: coords.top,
+            left: coords.left,
           }}
         >
           {/* Header */}

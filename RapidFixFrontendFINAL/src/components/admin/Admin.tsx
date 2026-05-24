@@ -72,6 +72,7 @@ export default function Admin({ staff }: AdminProps) {
           page={effectivePage}
           setPage={setPage}
           role={staff.role}
+          name={staff.name}
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
         />
