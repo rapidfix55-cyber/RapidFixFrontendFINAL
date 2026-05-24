@@ -19,6 +19,124 @@ const Muted = ({ v }: { v: string }) => (
   <span style={{ color: C.textSec, fontSize: 12 }}>{v}</span>
 );
 
+// ── Mobile job card ─────────────────────────────────────────────────────────────
+
+function JobCard({
+  job,
+  role,
+  onChanged,
+  onBill,
+  billBusy,
+}: {
+  job: Job;
+  role: Role;
+  onChanged: () => void;
+  onBill: (id: string) => void;
+  billBusy: boolean;
+}) {
+  const billable = job.status === "ready" || job.status === "delivered";
+  const model = `${job.vehicles?.make ?? ""} ${job.vehicles?.model ?? ""}`.trim();
+  return (
+    <div
+      style={{
+        padding: "12px 14px",
+        borderBottom: `1px solid ${C.borderFaint}`,
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
+        <span
+          style={{
+            fontWeight: 600,
+            fontSize: 14,
+            color: C.text,
+            minWidth: 0,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {job.customers?.name ?? "—"}
+        </span>
+        <JobStatusBadge
+          jobId={job.id}
+          current={job.status}
+          onChanged={onChanged}
+          readonly={role === "mechanic"}
+        />
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 8,
+          fontSize: 12,
+          color: C.textSec,
+        }}
+      >
+        <span style={{ fontFamily: "'Courier New',monospace" }}>
+          {job.vehicles?.registration ?? "—"}
+        </span>
+        <span>{model || "—"}</span>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
+        <span style={{ fontSize: 12, color: C.textSec }}>
+          <i className="ti ti-user" style={{ fontSize: 12, marginRight: 4 }} />
+          {job.mechanic?.name ?? "Unassigned"}
+        </span>
+        {role === "owner" && billable ? (
+          <button
+            onClick={() => onBill(job.id)}
+            disabled={billBusy}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
+              padding: "5px 12px",
+              fontSize: 12,
+              border: `1px solid ${C.accent}`,
+              background: C.accent + "12",
+              borderRadius: 4,
+              cursor: billBusy ? "wait" : "pointer",
+              color: C.accent,
+              fontFamily: "inherit",
+              fontWeight: 600,
+            }}
+          >
+            <i
+              className={`ti ${billBusy ? "ti-loader-2 ti-spin" : "ti-receipt"}`}
+              style={{ fontSize: 13 }}
+            />
+            {billBusy ? "…" : "Bill"}
+          </button>
+        ) : (
+          <span style={{ fontSize: 11, color: C.textMuted }}>
+            {new Date(job.updated_at).toLocaleDateString()}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Filters ───────────────────────────────────────────────────────────────────
 
 const FILTERS = [
@@ -327,7 +445,23 @@ export function Jobs({ role }: { role: Role }) {
             </span>
           </div>
         ) : jobs.length > 0 ? (
-          <DataTable columns={cols} rows={jobs} />
+          <>
+            <div className="jobs-desktop">
+              <DataTable columns={cols} rows={jobs} />
+            </div>
+            <div className="jobs-mobile">
+              {jobs.map((j) => (
+                <JobCard
+                  key={j.id}
+                  job={j}
+                  role={role}
+                  onChanged={fetchJobs}
+                  onBill={openBillForJob}
+                  billBusy={resolvingBill === j.id}
+                />
+              ))}
+            </div>
+          </>
         ) : (
           <div
             style={{
@@ -340,6 +474,15 @@ export function Jobs({ role }: { role: Role }) {
           </div>
         )}
       </div>
+
+      <style>{`
+        .jobs-desktop { display: block; }
+        .jobs-mobile { display: none; }
+        @media (max-width: 640px) {
+          .jobs-desktop { display: none; }
+          .jobs-mobile { display: block; }
+        }
+      `}</style>
 
       {billModal && (
         <BillModal

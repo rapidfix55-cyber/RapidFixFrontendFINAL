@@ -7,6 +7,7 @@ interface SidebarProps {
   page: Page;
   setPage: (p: Page) => void;
   role: Role;
+  name: string;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -15,10 +16,18 @@ export function Sidebar({
   page,
   setPage,
   role,
+  name,
   isOpen,
   onClose,
 }: SidebarProps) {
   const nav = NAV.filter((item) => role === "owner" || !item.ownerOnly);
+
+  const initials = (name || "")
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase())
+    .join("") || "U";
 
   // Close sidebar on route change (mobile)
   useEffect(() => {
@@ -106,7 +115,7 @@ export function Sidebar({
                   lineHeight: 1.2,
                 }}
               >
-                RepairOS
+                RapidFix
               </div>
               <div style={{ color: C.sbText, fontSize: 10 }}>
                 Workshop Manager
@@ -185,14 +194,23 @@ export function Sidebar({
                 flexShrink: 0,
               }}
             >
-              {role === "owner" ? "RO" : "MK"}
+              {initials}
             </div>
-            <div>
-              <div style={{ color: "#fff", fontSize: 12, fontWeight: 500 }}>
-                {role === "owner" ? "Rajesh (Owner)" : "Ramesh K."}
+            <div style={{ minWidth: 0 }}>
+              <div
+                style={{
+                  color: "#fff",
+                  fontSize: 12,
+                  fontWeight: 500,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {name || "User"}
               </div>
               <div style={{ color: C.sbText, fontSize: 10 }}>
-                {role === "owner" ? "Full Access" : "Mechanic View"}
+                {role === "owner" ? "Owner · Full Access" : "Mechanic View"}
               </div>
             </div>
           </div>
