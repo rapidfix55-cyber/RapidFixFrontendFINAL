@@ -7,7 +7,7 @@ import { LocateUs } from "@/components/LocateUs";
 import { StickyWhatsApp } from "@/components/StickyWhatsApp";
 import { LeadPopup } from "@/components/LeadPopup";
 import { GsapScrollWrapper } from "@/components/GsapScrollWrapper";
-import { FAQSection } from "@/components/FAQSection";
+import { ConditionalFAQ } from "@/components/ConditionalFAQ";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-sans",
@@ -95,6 +95,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://rapidfixauto.in",
   },
+
+  verification: {
+    google: "ZKRLwXx8rPojIu-_-DdPBNQD7j8RLTdYP158icm3DYg",
+  }
+
 };
 
 
@@ -109,7 +114,7 @@ export default function RootLayout({
         <Header />
         <GsapScrollWrapper>
           <main className="flex-1">{children}</main>
-          <FAQSection />
+          <ConditionalFAQ />
           <LocateUs />
           <Footer />
         </GsapScrollWrapper>

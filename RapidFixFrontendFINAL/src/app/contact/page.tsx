@@ -75,7 +75,7 @@ export default function Contact() {
                 </div>
                 <div className="flex items-center gap-4">
                   <Mail className="h-8 w-8 text-[var(--color-primary)] shrink-0" />
-                  <p className="text-lg font-medium text-black/80">support@rapidfix.com</p>
+                  <p className="text-lg font-medium text-black/80">rapidfix55@gmail.com</p>
                 </div>
               </div>
             </div>

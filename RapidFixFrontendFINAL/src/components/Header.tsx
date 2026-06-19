@@ -30,20 +30,20 @@ export function Header() {
   ]
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[var(--color-grey-200)] bg-[var(--color-white)]">
-      <div className="container mx-auto px-4 md:px-8 h-20 flex items-center justify-between relative bg-[var(--color-white)] z-50">
+    <header className="sticky top-0 z-70 w-full border-b border-(--color-grey-200) bg-(--color-white)">
+      <div className="container mx-auto px-4 md:px-8 h-20 flex items-center justify-between relative bg-(--color-white) z-70">
         <Link href="/" className="text-xl md:text-3xl font-black tracking-tight z-50 relative flex items-center gap-2 md:gap-3 shrink-0">
           <Image src="/NewLogoSvg.svg" alt="RapidFix Logo" width={100} height={100} className="hidden md:block object-contain max-h-12 md:max-h-16 w-auto" />
-          <span>RAPID<span className="text-[var(--color-primary)]">FIX</span></span>
+          <span>RAPID<span className="text-(--color-primary)">FIX</span></span>
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm font-bold tracking-wider relative z-50">
-          <Link href="/" className="hover:text-[var(--color-primary)] transition-colors">HOME</Link>
+          <Link href="/" className="hover:text-(--color-primary) transition-colors">HOME</Link>
           <div 
             className="relative"
             onMouseEnter={() => setIsServicesOpen(true)}
             onMouseLeave={() => setIsServicesOpen(false)}
           >
-            <Link href="/services" className="hover:text-[var(--color-primary)] transition-colors uppercase cursor-pointer flex items-center h-20">
+            <Link href="/services" className="hover:text-(--color-primary) transition-colors uppercase cursor-pointer flex items-center h-20">
               SERVICES
             </Link>
             <AnimatePresence>
@@ -59,31 +59,31 @@ export function Header() {
                     <Link
                       key={idx}
                       href={service.href}
-                      className="relative z-0 px-6 py-5 text-base font-black tracking-widest text-[var(--color-primary)] uppercase border-b border-white/5 overflow-hidden group"
+                      className="relative z-0 px-6 py-5 text-base font-black tracking-widest text-(--color-primary) uppercase border-b border-white/5 overflow-hidden group"
                     >
                       <span className="relative z-10 group-hover:text-white transition-colors duration-300">
                         {service.name}
                       </span>
                       {/* Left-to-right fill animation */}
-                      <div className="absolute inset-0 bg-[var(--color-primary)] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out z-[-1]" />
+                      <div className="absolute inset-0 bg-(--color-primary) origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out z-[-1]" />
                     </Link>
                   ))}
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
-          <Link href="/about" className="hover:text-[var(--color-primary)] transition-colors">ABOUT</Link>
-          <Link href="/contact" className="hover:text-[var(--color-primary)] transition-colors">CONTACT</Link>
+          <Link href="/about" className="hover:text-(--color-primary) transition-colors">ABOUT</Link>
+          <Link href="/contact" className="hover:text-(--color-primary) transition-colors">CONTACT</Link>
         </nav>
         <div className="flex items-center gap-2 md:gap-4 z-50 relative shrink-0">
           <a href="https://wa.me/919667891434" target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" className="hidden md:inline-flex border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white">SOS</Button>
+            <Button variant="outline" className="hidden md:inline-flex border-(--color-primary) text-(--color-primary) hover:bg-(--color-primary) hover:text-white">SOS</Button>
           </a>
           <Link href="/booking">
             <Button className="text-xs px-3 h-9 md:text-sm md:px-4 md:h-10">BOOK NOW</Button>
           </Link>
           <button 
-            className="md:hidden p-1 text-black hover:text-[var(--color-primary)] transition-colors" 
+            className="relative z-80 md:hidden p-1 text-black hover:text-(--color-primary) transition-colors" 
             aria-label="Menu"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
@@ -94,19 +94,32 @@ export function Header() {
 
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden w-full bg-[var(--color-white)] border-b border-[var(--color-grey-200)] flex flex-col overflow-hidden"
-          >
-            <div className="flex flex-col py-4">
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="px-6 py-3 font-bold hover:bg-[var(--color-grey-100)]">HOME</Link>
+          <>
+            <motion.button
+              type="button"
+              aria-label="Close menu"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="md:hidden fixed inset-0 top-20 z-60 bg-black/20"
+              onClick={() => {
+                setIsMobileMenuOpen(false)
+                setIsServicesOpen(false)
+              }}
+            />
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden fixed left-0 right-0 top-20 z-65 max-h-[calc(100vh-5rem)] w-full overflow-y-auto border-b border-(--color-grey-200) bg-(--color-white) flex flex-col"
+            >
+              <div className="flex flex-col py-4">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="px-6 py-3 font-bold hover:bg-(--color-grey-100)">HOME</Link>
               
-              <div className="flex flex-col border-t border-[var(--color-grey-100)]">
+              <div className="flex flex-col border-t border-(--color-grey-100)">
                 <button 
                   onClick={() => setIsServicesOpen(!isServicesOpen)}
-                  className="px-6 py-3 font-bold text-left text-gray-500 text-sm hover:bg-[var(--color-grey-100)] flex justify-between items-center"
+                  className="px-6 py-3 font-bold text-left text-gray-500 text-sm hover:bg-(--color-grey-100) flex justify-between items-center"
                 >
                   SERVICES
                   <span className="text-xs">{isServicesOpen ? '▲' : '▼'}</span>
@@ -127,7 +140,7 @@ export function Header() {
                             setIsMobileMenuOpen(false);
                             setIsServicesOpen(false);
                           }}
-                          className="pl-4 text-sm font-bold text-[var(--color-primary)] py-1 hover:bg-[var(--color-grey-100)]"
+                          className="pl-4 text-sm font-bold text-(--color-primary) py-1 hover:bg-(--color-grey-100)"
                         >
                           {service.name}
                         </Link>
@@ -137,20 +150,21 @@ export function Header() {
                 </AnimatePresence>
               </div>
               
-              <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="px-6 py-3 border-t border-[var(--color-grey-100)] font-bold hover:bg-[var(--color-grey-100)]">ABOUT</Link>
-              <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="px-6 py-3 border-t border-[var(--color-grey-100)] font-bold hover:bg-[var(--color-grey-100)]">CONTACT</Link>
+              <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="px-6 py-3 border-t border-(--color-grey-100) font-bold hover:bg-(--color-grey-100)">ABOUT</Link>
+              <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="px-6 py-3 border-t border-(--color-grey-100) font-bold hover:bg-(--color-grey-100)">CONTACT</Link>
               <a 
                 href="https://wa.me/919667891434" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 onClick={() => setIsMobileMenuOpen(false)} 
-                className="px-6 py-3 border-t border-[var(--color-grey-100)] font-bold text-[var(--color-primary)] hover:bg-[var(--color-grey-100)] flex items-center justify-between"
+                className="px-6 py-3 border-t border-(--color-grey-100) font-bold text-(--color-primary) hover:bg-(--color-grey-100) flex items-center justify-between"
               >
                 SOS EMERGENCY
-                <span className="size-2 rounded-full bg-[var(--color-primary)] animate-pulse" />
+                <span className="size-2 rounded-full bg-(--color-primary) animate-pulse" />
               </a>
-            </div>
-          </motion.div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </header>

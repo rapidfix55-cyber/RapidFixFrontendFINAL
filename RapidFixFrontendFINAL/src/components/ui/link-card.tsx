@@ -62,10 +62,10 @@ const LinkCard = React.forwardRef<HTMLAnchorElement, LinkCardProps>(
         {/* Image/Emoji container with a subtle scale effect on hover */}
         {(imageUrl || emoji || icon) && (
           <div className={cn(
-            "absolute",
+            "order-first mb-4 h-24 w-24 flex-shrink-0 md:order-none md:absolute md:mb-0",
             centeredImage 
-              ? "bottom-6 right-6 h-28 w-28 flex items-center justify-center" 
-              : "bottom-0 right-0 h-48 w-48 translate-x-1/4 translate-y-1/4 transform"
+              ? "md:bottom-6 md:right-6 md:h-28 md:w-28 md:flex md:items-center md:justify-center" 
+              : "md:bottom-0 md:right-0 md:h-48 md:w-48 md:translate-x-1/4 md:translate-y-1/4 md:transform"
           )}>
             {imageUrl ? (
               <motion.img
@@ -75,13 +75,13 @@ const LinkCard = React.forwardRef<HTMLAnchorElement, LinkCardProps>(
               />
             ) : icon ? (
               <motion.div 
-                className="flex items-center justify-center h-full w-full p-6 transition-transform duration-300 ease-out group-hover:scale-125 group-hover:-rotate-12"
+                className="flex h-full w-full items-center justify-center p-2 md:p-6 transition-transform duration-300 ease-out group-hover:scale-125 group-hover:-rotate-12"
               >
                 {icon}
               </motion.div>
             ) : (
               <motion.span 
-                className="flex items-center justify-center h-full w-full text-8xl transition-transform duration-300 ease-out group-hover:scale-125 group-hover:-rotate-12"
+                className="flex h-full w-full items-center justify-center text-6xl md:text-8xl transition-transform duration-300 ease-out group-hover:scale-125 group-hover:-rotate-12"
               >
                 {emoji}
               </motion.span>
