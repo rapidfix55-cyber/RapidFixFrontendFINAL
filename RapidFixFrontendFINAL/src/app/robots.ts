@@ -1,22 +1,27 @@
-import type { MetadataRoute } from 'next';
+import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
-        userAgent: '*',
-        allow: '/',
+        userAgent: "*",
+        allow: "/",
         disallow: [
-          '/admin',
-          '/admin/',
-          '/checkout',
-          '/checkout/',
-          '/api/',
-          '/_next/',
+          "/svc/",       // internal rewrite target — duplicate of /service-in-city URLs
+          "/admin/",
+          "/checkout/",
+          "/api/",
+          "/_next/",
         ],
       },
+      // Allow Google's AdsBot so Shopping/Ads can crawl product pages
+      {
+        userAgent: "AdsBot-Google",
+        allow: "/",
+        disallow: ["/admin/", "/checkout/", "/api/"],
+      },
     ],
-    sitemap: 'https://rapidfixauto.in/sitemap.xml',
-    host: 'https://rapidfixauto.in',
+    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://rapidfixauto.in"}/sitemap.xml`,
+    host: process.env.NEXT_PUBLIC_SITE_URL ?? "https://rapidfixauto.in",
   };
 }

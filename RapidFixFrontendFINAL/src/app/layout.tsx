@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { SiteChrome } from "@/components/SiteChrome";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-sans",
@@ -89,6 +88,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://rapidfixauto.in",
   },
+
+  verification: {
+    google: "fPLKAAGhBd6Vyv8LCmdOToTTp886gBDGJCGi4-8xafw",
+  },
 };
 
 
@@ -100,7 +103,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${spaceGrotesk.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans overflow-x-hidden">
-        <SiteChrome>{children}</SiteChrome>
+        {children}
       </body>
     </html>
   );

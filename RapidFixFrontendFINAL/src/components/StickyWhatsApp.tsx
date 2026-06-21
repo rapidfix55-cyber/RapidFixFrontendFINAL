@@ -1,48 +1,71 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MessageCircle } from "lucide-react";
+
+const WA_URL = `https://wa.me/919667891434?text=${encodeURIComponent(
+  "Hi RapidFix!\n\nI found you online and need a vehicle repair.\n\nPlease let me know the next available slot and estimated cost. Thanks!",
+)}`;
 
 export function StickyWhatsApp() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [visible, setVisible] = useState(true);
+  const [pulse, setPulse] = useState(false);
+  const [tooltip, setTooltip] = useState(false);
 
+  // Hide when contact section is in view
   useEffect(() => {
-    const handleScroll = () => {
-      const contactSection = document.getElementById("contact");
-      if (contactSection) {
-        const rect = contactSection.getBoundingClientRect();
-        // If the top of the contact section is above the bottom of the viewport,
-        // it means we have reached the contact section.
-        if (rect.top <= window.innerHeight) {
-          setIsVisible(false);
-        } else {
-          setIsVisible(true);
-        }
-      }
+    const check = () => {
+      const el = document.getElementById("contact");
+      if (el) setVisible(el.getBoundingClientRect().top > window.innerHeight);
     };
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    return () => window.removeEventListener("scroll", check);
+  }, []);
 
-    window.addEventListener("scroll", handleScroll);
-    // Initial check
-    handleScroll();
-
-    return () => window.removeEventListener("scroll", handleScroll);
+  // Pulse + tooltip after 45 s if user hasn't interacted with WhatsApp yet
+  useEffect(() => {
+    if (sessionStorage.getItem("rf_wa_pulsed")) return;
+    const t = setTimeout(() => {
+      setPulse(true);
+      setTooltip(true);
+      sessionStorage.setItem("rf_wa_pulsed", "1");
+    }, 45_000);
+    return () => clearTimeout(t);
   }, []);
 
   return (
-    <a
-      href={`https://wa.me/919667891434?text=${encodeURIComponent(
-        `Hi RapidFix!\n\nI found you online and need a vehicle repair.\n\nPlease let me know the next available slot and estimated cost. Thanks!`,
-      )}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`fixed bottom-8 right-8 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-xl hover:scale-110 transition-all duration-300 ${
-        isVisible
-          ? "opacity-100 translate-y-0"
-          : "opacity-0 translate-y-10 pointer-events-none"
+    <div
+      className={`fixed bottom-8 right-8 z-50 flex flex-col items-end gap-2 transition-all duration-300 ${
+        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
       }`}
-      aria-label="Chat with us on WhatsApp"
     >
-      <img src="/WhatsApp.svg" alt="WhatsApp" width={36} height={36} />
-    </a>
+      {/* Tooltip — above on desktop, to the left on mobile */}
+      {tooltip && (
+        <div className="bg-white text-black text-xs font-bold px-3 py-2 rounded-xl shadow-xl border border-black/10 max-w-[160px] text-center leading-snug animate-in fade-in duration-300
+          sm:relative sm:self-auto
+          absolute right-[60px] bottom-0 sm:bottom-auto sm:right-auto">
+          Chat with us now
+          <br />
+          <span className="font-normal text-black/60">avg. reply in 2 mins</span>
+        </div>
+      )}
+
+      <a
+        href={WA_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => { setPulse(false); setTooltip(false); }}
+        aria-label="Chat with us on WhatsApp"
+        className={`relative bg-[#25D366] text-white p-4 rounded-full shadow-xl hover:scale-110 transition-transform duration-300 ${
+          pulse ? "animate-bounce" : ""
+        }`}
+      >
+        {/* Ripple ring when pulsing */}
+        {pulse && (
+          <span className="absolute inset-0 rounded-full bg-[#25D366] opacity-40 animate-ping" />
+        )}
+        <img src="/WhatsApp.svg" alt="WhatsApp" width={36} height={36} />
+      </a>
+    </div>
   );
 }

@@ -1,30 +1,18 @@
-"use client";
-
-import { usePathname } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { LocateUs } from "@/components/LocateUs";
 import { StickyWhatsApp } from "@/components/StickyWhatsApp";
 import { LeadPopup } from "@/components/LeadPopup";
 import { GsapScrollWrapper } from "@/components/GsapScrollWrapper";
-import { FAQSection } from "@/components/FAQSection";
 
-const BARE_PREFIXES = ["/bill"];
-
-export function SiteChrome({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname() ?? "";
-  const isBare = BARE_PREFIXES.some((p) => pathname.startsWith(p));
-
-  if (isBare) {
-    return <main className="flex-1">{children}</main>;
-  }
-
+// Service-city pages use this layout — identical to SiteChrome but without the
+// global generic FAQSection, because each city page renders its own dynamic FAQ.
+export default function ServiceCityLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
       <GsapScrollWrapper>
         <main className="flex-1">{children}</main>
-        <FAQSection />
         <LocateUs />
         <Footer />
       </GsapScrollWrapper>

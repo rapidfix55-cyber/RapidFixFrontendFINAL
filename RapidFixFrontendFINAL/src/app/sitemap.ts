@@ -1,93 +1,51 @@
-import type { MetadataRoute } from 'next';
+import type { MetadataRoute } from "next";
+import { cities } from "@/lib/cityData";
 
-// Add all the cities you want to rank for
-const cities = [
-  'delhi', 'noida', 'gurgaon', 'faridabad', 'ghaziabad', 'greater-noida', 'dwarka'
-];
+const BASE = "https://rapidfixauto.in";
 
-const services = [
-  'bike-service', 'car-service', 'bike-repair', 'car-repair',
-  'puncture-repair', 'car-ac-repair', 'denting-painting',
-  'ev-service', 'battery-replacement', 'tyre-wheel'
-];
+const SERVICES = [
+  "bike-service",
+  "car-service",
+  "mechanic-near-me",
+  "car-ac-repair",
+  "battery-replacement",
+  "tyre-wheel",
+  "engine-repair",
+  "denting-painting",
+  "ev-service",
+] as const;
+
+// Tier the cities: Delhi NCR metro gets higher priority (more search volume)
+const TIER1_CITIES = ["delhi", "noida", "gurgaon", "faridabad", "ghaziabad", "greater-noida", "dwarka", "rohini", "pitampura", "janakpuri", "lajpat-nagar"];
+const TIER2_CITIES = cities.filter((c) => !TIER1_CITIES.includes(c));
+
+function url(path: string, priority: number, changeFreq: MetadataRoute.Sitemap[number]["changeFrequency"]): MetadataRoute.Sitemap[number] {
+  return { url: `${BASE}${path}`, priority, changeFrequency: changeFreq, lastModified: new Date() };
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://rapidfixauto.in';
-
-  // Static routes
+  // ── Static pages ───────────────────────────────────────────────────────────
   const staticRoutes: MetadataRoute.Sitemap = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/actions`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/booking`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/locations`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.6,
-    },
+    url("/",          1.0, "weekly"),
+    url("/booking",   0.95, "monthly"),
+    url("/locations", 0.85, "weekly"),
+    url("/services",  0.80, "monthly"),
+    url("/actions",   0.75, "weekly"),
+    url("/blog",      0.70, "weekly"),
+    url("/about",     0.60, "monthly"),
+    url("/contact",   0.60, "monthly"),
+    url("/privacy",   0.20, "yearly"),
   ];
 
-  // Dynamic [city] routes
-  const cityRoutes: MetadataRoute.Sitemap = cities.map((city) => ({
-    url: `${baseUrl}/mechanic-near-me-in-${city}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.9,   // high priority — these are your SEO money pages
-  }));
+  // ── Tier-1 city service pages (Delhi NCR — highest commercial intent) ──────
+  const tier1Pages: MetadataRoute.Sitemap = SERVICES.flatMap((service) =>
+    TIER1_CITIES.map((city) => url(`/${service}-in-${city}`, 0.90, "weekly"))
+  );
 
-  const serviceRoutes: MetadataRoute.Sitemap = services.map(s => ({
-    url: `${baseUrl}/services/${s}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.8,
-  }));
+  // ── Tier-2 city service pages (other metros) ──────────────────────────────
+  const tier2Pages: MetadataRoute.Sitemap = SERVICES.flatMap((service) =>
+    TIER2_CITIES.map((city) => url(`/${service}-in-${city}`, 0.75, "monthly"))
+  );
 
-  const bikeServiceCityRoutes: MetadataRoute.Sitemap = cities.map(city => ({
-    url: `${baseUrl}/bike-service-in-${city}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.9,
-  }));
-
-  const carServiceCityRoutes: MetadataRoute.Sitemap = cities.map(city => ({
-    url: `${baseUrl}/car-service-in-${city}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.9,
-  }));
-
-  return [...staticRoutes, ...cityRoutes, ...serviceRoutes, ...bikeServiceCityRoutes, ...carServiceCityRoutes];
+  return [...staticRoutes, ...tier1Pages, ...tier2Pages];
 }

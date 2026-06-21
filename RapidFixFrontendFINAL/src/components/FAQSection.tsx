@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const faqs = [
+const defaultFaqs = [
   {
     q: "What services does RapidFix provide for cars and bikes?",
     a: "RapidFix offers professional car and bike repair services including periodic maintenance, engine diagnostics, brake repair, AC servicing, battery replacement, tyre services, denting & painting, and emergency roadside assistance. Our workshop ensures reliable and affordable vehicle servicing.",
@@ -31,7 +31,19 @@ const faqs = [
   },
 ];
 
-export function FAQSection() {
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface FAQSectionProps {
+  items?: FAQItem[];
+}
+
+export function FAQSection({ items }: FAQSectionProps = {}) {
+  const faqs = items
+    ? items.map((i) => ({ q: i.question, a: i.answer }))
+    : defaultFaqs;
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFaq = (index: number) => {
