@@ -159,12 +159,12 @@ export default async function ServiceCityPage({ params }: PageProps) {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
             <ServiceIcon slug={service as ServiceIconKey} className="h-14 w-14 sm:h-20 sm:w-20 shrink-0" />
             <div>
-              <p className="text-xs sm:text-sm font-black uppercase tracking-[0.3em] text-white/75 mb-2">
+              <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-[0.2em] text-white/90 mb-2">
                 {meta.label} in {cityLabel}
-              </p>
-              <h1 className="text-4xl sm:text-5xl md:text-[clamp(3rem,7vw,5.5rem)] font-black uppercase tracking-tight leading-[0.95]">
-                {meta.hero}
               </h1>
+              <p className="text-4xl sm:text-5xl md:text-[clamp(3rem,7vw,5.5rem)] font-black uppercase tracking-tight leading-[0.95]">
+                {meta.hero}
+              </p>
             </div>
           </div>
           <p className="mt-5 text-base sm:text-lg md:text-xl font-medium text-white/85 max-w-2xl leading-relaxed">
