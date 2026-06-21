@@ -452,24 +452,24 @@ const ScrollExpandMedia = ({
                 </div>
               </motion.div>
 
-              <div
+              <h1
                 className={`flex items-center justify-center text-center gap-4 w-full relative z-10 transition-none flex-col ${
                   textBlend ? "mix-blend-difference" : "mix-blend-normal"
                 }`}
               >
-                <motion.h2
-                  className="text-5xl md:text-7xl lg:text-8xl font-black text-white transition-none uppercase tracking-tight drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] whitespace-nowrap"
+                <motion.span
+                  className="text-5xl md:text-7xl lg:text-8xl font-black text-white transition-none uppercase tracking-tight drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] whitespace-nowrap block"
                   style={{ x: textTranslateXLeft }}
                 >
                   {firstWord}
-                </motion.h2>
-                <motion.h2
-                  className="text-5xl md:text-7xl lg:text-8xl font-black text-center text-[var(--color-primary)] transition-none uppercase tracking-tight drop-shadow-[0_0_20px_var(--color-primary)] whitespace-nowrap"
+                </motion.span>
+                <motion.span
+                  className="text-5xl md:text-7xl lg:text-8xl font-black text-center text-[var(--color-primary)] transition-none uppercase tracking-tight drop-shadow-[0_0_20px_var(--color-primary)] whitespace-nowrap block"
                   style={{ x: textTranslateXRight }}
                 >
                   {restOfTitle}
-                </motion.h2>
-              </div>
+                </motion.span>
+              </h1>
 
               {/* Post-Expansion Scroll Indicator */}
               <motion.div
