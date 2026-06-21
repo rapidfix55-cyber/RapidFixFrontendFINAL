@@ -44,7 +44,10 @@ const ScrollExpandMedia = ({
   const [showContent, setShowContent] = useState<boolean>(false);
   const [mediaFullyExpanded, setMediaFullyExpanded] = useState<boolean>(false);
   const [touchStartY, setTouchStartY] = useState<number>(0);
-  const [isMobileState, setIsMobileState] = useState<boolean>(false);
+  // Start as true on mobile — prevents flash of locked state before effect runs
+  const [isMobileState, setIsMobileState] = useState<boolean>(
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [frameImages, setFrameImages] = useState<HTMLImageElement[]>([]);
 
@@ -63,6 +66,16 @@ const ScrollExpandMedia = ({
   });
 
   useEffect(() => {
+    // On mobile: always show content immediately, never reset to locked state
+    if (window.innerWidth < 768) {
+      progress.set(1);
+      springProgress.set(1);
+      targetProgressRef.current = 1;
+      mediaFullyExpandedRef.current = true;
+      setMediaFullyExpanded(true);
+      setShowContent(true);
+      return;
+    }
     progress.set(0);
     targetProgressRef.current = 0;
     setShowContent(false);
@@ -72,6 +85,9 @@ const ScrollExpandMedia = ({
   }, [mediaType]);
 
   useEffect(() => {
+    // Mobile: no scroll-lock listeners needed — content is shown immediately
+    if (window.innerWidth < 768) return;
+
     const handleWheel = (e: WheelEvent) => {
       if (
         mediaFullyExpandedRef.current &&
@@ -202,13 +218,22 @@ const ScrollExpandMedia = ({
           : Math.min(1550, window.innerWidth * 0.95),
         height: isMobile ? window.innerHeight * 0.85 : 800,
       });
+      // On mobile: skip animation entirely — jump spring to 1 so no frames play
+      if (isMobile) {
+        progress.set(1);
+        springProgress.set(1); // bypass spring — no frame-by-frame animation
+        targetProgressRef.current = 1;
+        mediaFullyExpandedRef.current = true;
+        setMediaFullyExpanded(true);
+        setShowContent(true);
+      }
     };
 
     handleResize();
     window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [progress, springProgress]);
 
   // No React state lerp needed anymore - handled by useSpring(progress)
 
