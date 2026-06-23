@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
     "How RapidFix collects, uses, and protects your information, including WhatsApp communications.",
-  alternates: { canonical: "https://rapidfixauto.in/privacy" },
+  alternates: { canonical: "https://www.rapidfixauto.in/privacy" },
 };
 
 const UPDATED = "20 May 2026";
@@ -62,7 +62,7 @@ export default function PrivacyPage() {
               When you book a service, submit your number through our website, or
               message us on WhatsApp, you consent to receive service-related
               WhatsApp messages from RapidFix at the number you provide. These
-              are transactional updates about your booking, job, and bill — not
+              are transactional updates about your booking, job, and bill â€” not
               promotional spam.
             </p>
             <p className="mt-2">
@@ -75,7 +75,7 @@ export default function PrivacyPage() {
           <Section title="5. Sharing Your Information">
             <p>
               We do not sell your personal information. We share it only as
-              needed to deliver our service — for example, with Meta Platforms
+              needed to deliver our service â€” for example, with Meta Platforms
               (WhatsApp) to deliver messages you have opted in to, and with
               service providers who help us operate (such as hosting and
               database providers). These parties are only permitted to use your

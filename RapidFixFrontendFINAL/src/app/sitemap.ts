@@ -1,7 +1,7 @@
-import type { MetadataRoute } from "next";
+﻿import type { MetadataRoute } from "next";
 import { cities } from "@/lib/cityData";
 
-const BASE = "https://rapidfixauto.in";
+const BASE = "https://www.rapidfixauto.in";
 
 const SERVICES = [
   "bike-service",
@@ -24,7 +24,7 @@ function url(path: string, priority: number, changeFreq: MetadataRoute.Sitemap[n
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // ── Static pages ───────────────────────────────────────────────────────────
+  // â”€â”€ Static pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const staticRoutes: MetadataRoute.Sitemap = [
     url("/",          1.0, "weekly"),
     url("/booking",   0.95, "monthly"),
@@ -37,12 +37,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url("/privacy",   0.20, "yearly"),
   ];
 
-  // ── Tier-1 city service pages (Delhi NCR — highest commercial intent) ──────
+  // â”€â”€ Tier-1 city service pages (Delhi NCR â€” highest commercial intent) â”€â”€â”€â”€â”€â”€
   const tier1Pages: MetadataRoute.Sitemap = SERVICES.flatMap((service) =>
     TIER1_CITIES.map((city) => url(`/${service}-in-${city}`, 0.90, "weekly"))
   );
 
-  // ── Tier-2 city service pages (other metros) ──────────────────────────────
+  // â”€â”€ Tier-2 city service pages (other metros) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const tier2Pages: MetadataRoute.Sitemap = SERVICES.flatMap((service) =>
     TIER2_CITIES.map((city) => url(`/${service}-in-${city}`, 0.75, "monthly"))
   );

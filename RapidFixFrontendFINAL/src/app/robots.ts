@@ -1,4 +1,4 @@
-import type { MetadataRoute } from "next";
+﻿import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "*",
         allow: "/",
         disallow: [
-          "/svc/",       // internal rewrite target — duplicate of /service-in-city URLs
+          "/svc/",       // internal rewrite target â€” duplicate of /service-in-city URLs
           "/admin/",
           "/checkout/",
           "/api/",
@@ -21,7 +21,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin/", "/checkout/", "/api/"],
       },
     ],
-    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://rapidfixauto.in"}/sitemap.xml`,
-    host: process.env.NEXT_PUBLIC_SITE_URL ?? "https://rapidfixauto.in",
+    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.rapidfixauto.in"}/sitemap.xml`,
+    host: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.rapidfixauto.in",
   };
 }

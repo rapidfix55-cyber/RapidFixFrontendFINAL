@@ -1,10 +1,10 @@
-"use server"
+﻿"use server"
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Our Services",
-  description: "Explore all RapidFix automotive services — engine repair, AC service, tyre & wheel, denting & painting, EV service and more.",
-  alternates: { canonical: "https://rapidfixauto.in/actions" },
+  description: "Explore all RapidFix automotive services â€” engine repair, AC service, tyre & wheel, denting & painting, EV service and more.",
+  alternates: { canonical: "https://www.rapidfixauto.in/actions" },
 };
 
 export async function submitBooking(data: { 
