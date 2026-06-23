@@ -24,7 +24,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Home",
   description: "RapidFix offers expert car & bike service, repair, wash, AC repair, tyre, denting & painting, battery and EV service near you in Delhi NCR.",
-  alternates: { canonical: "https://rapidfixauto.in" },
+  alternates: { canonical: "https://www.rapidfixauto.in" },
 };
 
 export default function Home() {

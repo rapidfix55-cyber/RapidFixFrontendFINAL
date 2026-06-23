@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Denting & Painting | Doorstep Service | RapidFix",
   description: "Book expert denting & painting with RapidFix. We provide the best car repair near me, bike repair near me, and automotive repair in Delhi NCR.",
   keywords: ["car service near me","bike service near me","car repair near me","bike repair near me","car wash near me","bike wash near me","engine repair near me","car AC repair near me","battery replacement near me","tyre and wheel near me","denting and painting near me","EV service near me","puncture repair near me","rapidfix","rapidfixauto","automotive repair Delhi","mechanic near me"],
-  alternates: { canonical: "https://rapidfixauto.in/services/denting-painting" },
+  alternates: { canonical: "https://www.rapidfixauto.in/services/denting-painting" },
 };
 
 export default function dentingpaintingPage() {

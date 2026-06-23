@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${title} | RapidFix Blog`,
     description: `Read our latest article on ${title} and learn expert automotive tips.`,
-    alternates: { canonical: `https://rapidfixauto.in/blog/${params.slug}` },
+    alternates: { canonical: `https://www.rapidfixauto.in/blog/${params.slug}` },
   };
 }
 

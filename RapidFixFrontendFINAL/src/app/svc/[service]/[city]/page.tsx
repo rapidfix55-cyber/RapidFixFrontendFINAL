@@ -56,11 +56,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${meta.label} in ${cityLabel} | RapidFix`,
     description: `Expert ${meta.label.toLowerCase()} in ${cityLabel}. ${meta.description} Home pickup, same-day service. Starting ${meta.startPrice}.`,
-    alternates: { canonical: `https://rapidfixauto.in/${service}-in-${city}` },
+    alternates: { canonical: `https://www.rapidfixauto.in/${service}-in-${city}` },
     openGraph: {
       title: `${meta.label} in ${cityLabel} | RapidFix`,
       description: `${meta.label} in ${cityLabel} starting ${meta.startPrice}. Home pickup available.`,
-      url: `https://rapidfixauto.in/${service}-in-${city}`,
+      url: `https://www.rapidfixauto.in/${service}-in-${city}`,
       siteName: "RapidFix",
       locale: "en_IN",
       type: "website",
@@ -115,9 +115,9 @@ export default async function ServiceCityPage({ params }: PageProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home",        item: "https://rapidfixauto.in" },
-      { "@type": "ListItem", position: 2, name: meta.label,    item: `https://rapidfixauto.in/services` },
-      { "@type": "ListItem", position: 3, name: `${meta.label} in ${cityLabel}`, item: `https://rapidfixauto.in/${service}-in-${city}` },
+      { "@type": "ListItem", position: 1, name: "Home",        item: "https://www.rapidfixauto.in" },
+      { "@type": "ListItem", position: 2, name: meta.label,    item: `https://www.rapidfixauto.in/services` },
+      { "@type": "ListItem", position: 3, name: `${meta.label} in ${cityLabel}`, item: `https://www.rapidfixauto.in/${service}-in-${city}` },
     ],
   };
 
@@ -126,7 +126,7 @@ export default async function ServiceCityPage({ params }: PageProps) {
     "@type": "AutoRepair",
     name: `RapidFix ${meta.label} in ${cityLabel}`,
     description: `${meta.label} in ${cityLabel}. ${meta.description}`,
-    url: `https://rapidfixauto.in/${service}-in-${city}`,
+    url: `https://www.rapidfixauto.in/${service}-in-${city}`,
     telephone: "+919667891434",
     email: "rapidfix55@gmail.com",
     address: { "@type": "PostalAddress", addressLocality: cityLabel, addressCountry: "IN" },

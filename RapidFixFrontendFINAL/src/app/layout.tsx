@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
@@ -8,7 +8,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://rapidfixauto.in"), // required for resolving relative image URLs
+  metadataBase: new URL("https://www.rapidfixauto.in"), // required for resolving relative image URLs
 
   title: {
     default: "RapidFix | Car & Bike Service, Repair & Wash Near You",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     "mechanic near me",
   ],
 
-  authors: [{ name: "RapidFixAuto", url: "https://rapidfixauto.in" }],
+  authors: [{ name: "RapidFixAuto", url: "https://www.rapidfixauto.in" }],
   creator: "RapidFixAuto",
   publisher: "RapidFixAuto",
 
@@ -54,13 +54,13 @@ export const metadata: Metadata = {
     siteName: "RapidFixAuto",
     locale: "en_IN",
     type: "website",
-    url: "https://rapidfixauto.in",
+    url: "https://www.rapidfixauto.in",
     images: [
       {
-        url: "/newLogo-Photoroom.png",   // ⚠️ use a real 1200×630 JPG/PNG, SVGs don't render on WhatsApp/Facebook
+        url: "/newLogo-Photoroom.png",   // âš ï¸ use a real 1200Ã—630 JPG/PNG, SVGs don't render on WhatsApp/Facebook
         width: 1200,
         height: 630,
-        alt: "RapidFix – Car & Bike Service Near You",
+        alt: "RapidFix â€“ Car & Bike Service Near You",
       },
     ],
   },
@@ -86,7 +86,7 @@ export const metadata: Metadata = {
   },
 
   alternates: {
-    canonical: "https://rapidfixauto.in",
+    canonical: "https://www.rapidfixauto.in",
   },
 
   verification: {

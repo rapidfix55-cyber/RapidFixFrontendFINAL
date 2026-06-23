@@ -1,11 +1,11 @@
-import { Metadata } from "next";
+﻿import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Automotive Blog | Car & Bike Maintenance Tips | RapidFix",
   description: "Read the latest tips, tricks, and expert advice on car and bike maintenance, repairs, and auto news from RapidFix.",
   keywords: ["automotive blog", "car maintenance tips", "bike repair advice", "RapidFix blog"],
-  alternates: { canonical: "https://rapidfixauto.in/blog" },
+  alternates: { canonical: "https://www.rapidfixauto.in/blog" },
 };
 
 export default function BlogHubPage() {

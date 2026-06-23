@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Our Services | Car & Bike Services | RapidFix",
   description: "Explore a wide range of expert car and bike services at your doorstep with RapidFix.",
   keywords: ["car service near me","bike service near me","car repair near me","bike repair near me","car wash near me","bike wash near me","engine repair near me","car AC repair near me","battery replacement near me","tyre and wheel near me","denting and painting near me","EV service near me","puncture repair near me","rapidfix","rapidfixauto","automotive repair Delhi","mechanic near me"],
-  alternates: { canonical: "https://rapidfixauto.in/services" },
+  alternates: { canonical: "https://www.rapidfixauto.in/services" },
 };
 
 export default function ServicesHubPage() {

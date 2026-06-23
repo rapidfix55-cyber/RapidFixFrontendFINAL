@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Tyre & Wheel | Doorstep Service | RapidFix",
   description: "Book expert tyre & wheel with RapidFix. We provide the best car repair near me, bike repair near me, and automotive repair in Delhi NCR.",
   keywords: ["car service near me","bike service near me","car repair near me","bike repair near me","car wash near me","bike wash near me","engine repair near me","car AC repair near me","battery replacement near me","tyre and wheel near me","denting and painting near me","EV service near me","puncture repair near me","rapidfix","rapidfixauto","automotive repair Delhi","mechanic near me"],
-  alternates: { canonical: "https://rapidfixauto.in/services/tyre-wheel" },
+  alternates: { canonical: "https://www.rapidfixauto.in/services/tyre-wheel" },
 };
 
 export default function tyrewheelPage() {
