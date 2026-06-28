@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -179,14 +179,16 @@ export function AnimatedTestimonials() {
           </h2>
         </div>
         <div className="flex gap-4 mt-16">
-          <button 
+          <button
             onClick={prevTestimonial}
+            aria-label="Previous testimonial"
             className="w-14 h-14 border border-current/20 flex items-center justify-center hover:bg-[var(--color-primary)] hover:text-white transition-all hover:scale-110"
           >
             <ArrowLeft size={24} />
           </button>
-          <button 
+          <button
             onClick={nextTestimonial}
+            aria-label="Next testimonial"
             className="w-14 h-14 bg-[var(--color-primary)] text-white flex items-center justify-center hover:bg-[#96250C] transition-all hover:scale-110"
           >
             <ArrowRight size={24} />
@@ -213,7 +215,7 @@ export function AnimatedTestimonials() {
             </svg>
           </div>
           <div>
-            <h4 className="font-black text-sm tracking-widest uppercase">{currentT.name}</h4>
+            <p className="font-black text-sm tracking-widest uppercase">{currentT.name}</p>
             <p className="text-xs text-black/50 tracking-wider font-bold mt-1">{currentT.title}</p>
           </div>
         </div>

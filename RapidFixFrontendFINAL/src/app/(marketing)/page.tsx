@@ -12,13 +12,25 @@ import dynamic from "next/dynamic";
 const AnimatedServices = dynamic(() =>
   import("@/components/AnimatedServices").then((mod) => mod.AnimatedServices),
 );
-import { AnimatedWorkflow } from "@/components/AnimatedWorkflow";
-import { RecommendationStrip } from "@/components/RecommendationStrip";
-import { BrandsStrip } from "@/components/BrandsStrip";
-import { AnimatedTestimonials } from "@/components/AnimatedTestimonials";
-import { StatisticsStrip } from "@/components/StatisticsStrip";
-import { ServiceFlow } from "@/components/ServiceFlow";
-import Admin from "@/components/ui/admin";
+const AnimatedWorkflow = dynamic(() =>
+  import("@/components/AnimatedWorkflow").then((mod) => mod.AnimatedWorkflow),
+);
+const RecommendationStrip = dynamic(() =>
+  import("@/components/RecommendationStrip").then((mod) => mod.RecommendationStrip),
+);
+const BrandsStrip = dynamic(() =>
+  import("@/components/BrandsStrip").then((mod) => mod.BrandsStrip),
+);
+const AnimatedTestimonials = dynamic(() =>
+  import("@/components/AnimatedTestimonials").then((mod) => mod.AnimatedTestimonials),
+);
+const StatisticsStrip = dynamic(() =>
+  import("@/components/StatisticsStrip").then((mod) => mod.StatisticsStrip),
+);
+const ServiceFlow = dynamic(() =>
+  import("@/components/ServiceFlow").then((mod) => mod.ServiceFlow),
+);
+const Admin = dynamic(() => import("@/components/ui/admin"));
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -45,9 +57,9 @@ export default function Home() {
           <div className="p-8 flex items-center justify-center gap-6 hover:bg-[var(--color-grey-100)] transition-colors group cursor-pointer">
             <ShieldCheck className="w-8 h-8 text-black group-hover:scale-110 transition-transform" />
             <div>
-              <h4 className="font-black text-sm md:text-base tracking-widest uppercase">
+              <p className="font-black text-sm md:text-base tracking-widest uppercase">
                 30 Days Warranty
-              </h4>
+              </p>
               <p className="text-xs text-black/50 tracking-wider font-bold">
                 TECHNICAL GUARANTEE
               </p>
@@ -56,9 +68,9 @@ export default function Home() {
           <div className="p-8 flex items-center justify-center gap-6 hover:bg-[var(--color-grey-100)] transition-colors group cursor-pointer">
             <Clock className="w-8 h-8 text-black group-hover:scale-110 transition-transform" />
             <div>
-              <h4 className="font-black text-sm md:text-base tracking-widest uppercase">
+              <p className="font-black text-sm md:text-base tracking-widest uppercase">
                 Same Day Delivery
-              </h4>
+              </p>
               <p className="text-xs text-black/50 tracking-wider font-bold">
                 TIME OPTIMIZATION
               </p>
@@ -67,9 +79,9 @@ export default function Home() {
           <div className="p-8 flex items-center justify-center gap-6 hover:bg-[var(--color-grey-100)] transition-colors group cursor-pointer">
             <Banknote className="w-8 h-8 text-black group-hover:scale-110 transition-transform" />
             <div>
-              <h4 className="font-black text-sm md:text-base tracking-widest uppercase">
+              <p className="font-black text-sm md:text-base tracking-widest uppercase">
                 Transparent Pricing
-              </h4>
+              </p>
               <p className="text-xs text-black/50 tracking-wider font-bold">
                 NO HIDDEN CHARGES
               </p>

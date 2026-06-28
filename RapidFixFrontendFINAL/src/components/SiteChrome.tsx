@@ -1,13 +1,15 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { LocateUs } from "@/components/LocateUs";
 import { StickyWhatsApp } from "@/components/StickyWhatsApp";
 import { LeadPopup } from "@/components/LeadPopup";
 import { GsapScrollWrapper } from "@/components/GsapScrollWrapper";
 import { FAQSection } from "@/components/FAQSection";
+
+const LocateUs = dynamic(() => import("@/components/LocateUs").then((m) => m.LocateUs), { ssr: false });
 
 const BARE_PREFIXES = ["/bill"];
 

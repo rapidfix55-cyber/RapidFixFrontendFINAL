@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
@@ -43,8 +43,8 @@ export const metadata: Metadata = {
   publisher: "RapidFixAuto",
 
   icons: {
-    icon: "/NewLogoSvg.svg",
-    apple: "/NewLogoSvg.svg",
+    icon: "/logo.png",
+    apple: "/logo.png",
   },
 
   openGraph: {

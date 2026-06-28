@@ -39,11 +39,8 @@ export function StickyWhatsApp() {
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
       }`}
     >
-      {/* Tooltip — above on desktop, to the left on mobile */}
       {tooltip && (
-        <div className="bg-white text-black text-xs font-bold px-3 py-2 rounded-xl shadow-xl border border-black/10 max-w-[160px] text-center leading-snug animate-in fade-in duration-300
-          sm:relative sm:self-auto
-          absolute right-[60px] bottom-0 sm:bottom-auto sm:right-auto">
+        <div className="bg-white text-black text-xs font-bold px-3 py-2 rounded-xl shadow-xl border border-black/10 text-center leading-snug whitespace-nowrap animate-in fade-in duration-300">
           Chat with us now
           <br />
           <span className="font-normal text-black/60">avg. reply in 2 mins</span>
