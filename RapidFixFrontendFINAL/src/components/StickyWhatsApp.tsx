@@ -29,7 +29,7 @@ export function StickyWhatsApp() {
       setPulse(true);
       setTooltip(true);
       sessionStorage.setItem("rf_wa_pulsed", "1");
-    }, 45_000);
+    }, 25_000);
     return () => clearTimeout(t);
   }, []);
 
