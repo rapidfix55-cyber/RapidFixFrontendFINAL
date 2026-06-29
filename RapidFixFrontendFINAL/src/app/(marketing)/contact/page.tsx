@@ -95,7 +95,7 @@ export default function Contact() {
             
             {success ? (
               <div className="bg-green-50 border-2 border-green-500 text-green-800 p-8">
-                <h4 className="text-xl font-bold uppercase mb-2">Message Received</h4>
+                <p className="text-xl font-bold uppercase mb-2">Message Received</p>
                 <p className="font-medium">Our engineering team will review your inquiry and get back to you shortly.</p>
                 <Button className="mt-8 border-2 border-black rounded-none shadow-none" variant="outline" onClick={() => setSuccess(false)}>Send Another Message</Button>
               </div>

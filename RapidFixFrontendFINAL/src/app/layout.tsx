@@ -43,8 +43,8 @@ export const metadata: Metadata = {
   publisher: "RapidFixAuto",
 
   icons: {
-    icon: "/NewLogoSvg.svg",
-    apple: "/NewLogoSvg.svg",
+    icon: "/logo.png",
+    apple: "/logo.png",
   },
 
   openGraph: {

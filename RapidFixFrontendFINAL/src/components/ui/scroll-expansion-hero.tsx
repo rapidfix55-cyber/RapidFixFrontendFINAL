@@ -240,12 +240,22 @@ const ScrollExpandMedia = ({
   useEffect(() => {
     if (mediaType === "sequence") {
       const loaded: HTMLImageElement[] = [];
-      for (let i = 1; i <= 240; i++) {
-        const img = new window.Image();
-        img.src = `/carFrames/ezgif-frame-${i.toString().padStart(3, "0")}.jpg`;
-        loaded[i] = img;
-      }
-      setFrameImages(loaded);
+      // Preload first frame immediately so canvas isn't blank
+      const first = new window.Image();
+      first.src = "/carFrames/ezgif-frame-240.jpg";
+      loaded[240] = first;
+      setFrameImages([...loaded]);
+
+      // Load remaining frames after first paint — don't block LCP
+      first.onload = () => {
+        for (let i = 1; i <= 240; i++) {
+          if (i === 240) continue;
+          const img = new window.Image();
+          img.src = `/carFrames/ezgif-frame-${i.toString().padStart(3, "0")}.jpg`;
+          loaded[i] = img;
+        }
+        setFrameImages([...loaded]);
+      };
     }
   }, [mediaType]);
 
@@ -432,7 +442,7 @@ const ScrollExpandMedia = ({
                   </div>
                 )}
 
-                <div className="flex flex-col items-center text-center relative z-10 mt-6 transition-none">
+                <div className="flex flex-col items-center text-center relative z-10 mt-6 transition-none min-h-[3.5rem]">
                   {date && (
                     <motion.p
                       className="text-2xl font-bold tracking-widest text-[var(--color-primary)]"

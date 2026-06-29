@@ -12,6 +12,17 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      // www → non-www permanent redirect (prevents duplicate content, saves crawl budget)
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.rapidfixauto.in" }],
+        destination: "https://rapidfixauto.in/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {

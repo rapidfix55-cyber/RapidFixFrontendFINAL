@@ -49,9 +49,9 @@ export default function carservicePage() {
           <div className="p-8 flex items-center justify-center gap-6 hover:bg-[var(--color-grey-100)] transition-colors group cursor-pointer">
             <ShieldCheck className="w-8 h-8 text-black group-hover:scale-110 transition-transform" />
             <div>
-              <h4 className="font-black text-sm md:text-base tracking-widest uppercase">
+              <p className="font-black text-sm md:text-base tracking-widest uppercase">
                 30 Days Warranty
-              </h4>
+              </p>
               <p className="text-xs text-black/50 tracking-wider font-bold">
                 TECHNICAL GUARANTEE
               </p>
@@ -60,9 +60,9 @@ export default function carservicePage() {
           <div className="p-8 flex items-center justify-center gap-6 hover:bg-[var(--color-grey-100)] transition-colors group cursor-pointer">
             <Clock className="w-8 h-8 text-black group-hover:scale-110 transition-transform" />
             <div>
-              <h4 className="font-black text-sm md:text-base tracking-widest uppercase">
+              <p className="font-black text-sm md:text-base tracking-widest uppercase">
                 Same Day Delivery
-              </h4>
+              </p>
               <p className="text-xs text-black/50 tracking-wider font-bold">
                 TIME OPTIMIZATION
               </p>
@@ -71,9 +71,9 @@ export default function carservicePage() {
           <div className="p-8 flex items-center justify-center gap-6 hover:bg-[var(--color-grey-100)] transition-colors group cursor-pointer">
             <Banknote className="w-8 h-8 text-black group-hover:scale-110 transition-transform" />
             <div>
-              <h4 className="font-black text-sm md:text-base tracking-widest uppercase">
+              <p className="font-black text-sm md:text-base tracking-widest uppercase">
                 Transparent Pricing
-              </h4>
+              </p>
               <p className="text-xs text-black/50 tracking-wider font-bold">
                 NO HIDDEN CHARGES
               </p>

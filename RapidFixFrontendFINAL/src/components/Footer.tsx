@@ -1,4 +1,4 @@
-import Link from "next/link"
+﻿import Link from "next/link"
 
 export function Footer() {
   return (
@@ -15,7 +15,7 @@ export function Footer() {
           </p>
         </div>
         <div>
-          <h4 className="font-bold mb-4">NAVIGATION</h4>
+          <p className="font-bold mb-4">NAVIGATION</p>
           <ul className="space-y-2 text-sm text-[var(--color-grey-300)]">
             <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
             <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
@@ -24,7 +24,7 @@ export function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="font-bold mb-4">SERVICES</h4>
+          <p className="font-bold mb-4">SERVICES</p>
           <ul className="space-y-2 text-sm text-[var(--color-grey-300)]">
             <li><Link href="/booking" className="hover:text-white transition-colors">Bike Service</Link></li>
             <li><Link href="/booking" className="hover:text-white transition-colors">Car Service</Link></li>
@@ -37,7 +37,7 @@ export function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="font-bold mb-4">CONTACT</h4>
+          <p className="font-bold mb-4">CONTACT</p>
           <ul className="space-y-2 text-sm text-[var(--color-grey-300)]">
             <li>96678 91434</li>
             <li>rapidfix55@gmail.com</li>
